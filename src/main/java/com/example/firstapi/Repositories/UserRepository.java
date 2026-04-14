@@ -13,8 +13,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("select u from User u where u.chatId = :chatId")
     Optional<User> findUserByChatId(@Param("chatId") String chatId);
 
-    Optional<User> findByChatId(String chatId);
-
     boolean existsUserByChatId(String chatId);
 
     int deleteByChatId(String chatId);

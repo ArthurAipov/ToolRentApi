@@ -32,13 +32,7 @@ public class ToolDTO {
             @NotBlank String name,
             @NotNull @Min(0) Long price,
             String callbackData,
-            @NotBlank String toolStatus
+            @NotNull  ToolStatus toolStatus
     ) {
     }
-
-    public record UpdateToolStatus(
-            @NotNull @Positive Long id,
-            @NotBlank String status
-    ){}
-
 }

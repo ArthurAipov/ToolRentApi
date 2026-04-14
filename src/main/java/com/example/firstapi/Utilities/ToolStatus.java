@@ -18,7 +18,7 @@ public enum ToolStatus {
         for (ToolStatus s : values()){
             if (s.Status().equals(value)) return s;
         }
-        throw new IllegalArgumentException("Unknown tool status: " + value);
+        return null;
     }
 
 }
