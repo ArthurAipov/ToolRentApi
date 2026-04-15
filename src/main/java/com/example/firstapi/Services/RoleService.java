@@ -1,6 +1,6 @@
-package com.example.firstapi.Controllers.Services;
+package com.example.firstapi.Services;
 
-import com.example.firstapi.Controllers.dtos.RoleDTO;
+import com.example.firstapi.dtos.RoleDTO;
 import com.example.firstapi.Models.Role;
 import com.example.firstapi.Repositories.RoleRepository;
 import org.springframework.transaction.annotation.Transactional;

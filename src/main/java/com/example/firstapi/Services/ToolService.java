@@ -1,6 +1,6 @@
-package com.example.firstapi.Controllers.Services;
+package com.example.firstapi.Services;
 
-import com.example.firstapi.Controllers.dtos.ToolDTO;
+import com.example.firstapi.dtos.ToolDTO;
 import com.example.firstapi.Models.Tool;
 import com.example.firstapi.Repositories.ToolRepository;
 import com.example.firstapi.Utilities.ToolStatus;
@@ -46,12 +46,12 @@ public class ToolService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ToolDTO.GetToolDTO> getToolsPage(Pageable pageable) {
+    public Page<ToolDTO.GetToolDTO> getTools(Pageable pageable) {
         return toolRepository.findAll(pageable).map(this::toDto);
     }
 
     @Transactional(readOnly = true)
-    public Page<ToolDTO.GetToolDTO> getToolsPageByStatus(String status, Pageable pageable) {
+    public Page<ToolDTO.GetToolDTO> getToolsByStatus(String status, Pageable pageable) {
         var toolStatus = ToolStatus.fromDb(status);
         if (toolStatus == null) {
             throw new IllegalArgumentException("Unsupported tool status: " + status);

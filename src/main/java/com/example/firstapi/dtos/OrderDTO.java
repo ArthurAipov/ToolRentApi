@@ -1,4 +1,4 @@
-package com.example.firstapi.Controllers.dtos;
+package com.example.firstapi.dtos;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;

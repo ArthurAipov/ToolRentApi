@@ -1,4 +1,4 @@
-package com.example.firstapi.Controllers.dtos;
+package com.example.firstapi.dtos;
 
 import com.example.firstapi.Utilities.ToolStatus;
 import jakarta.validation.constraints.Min;

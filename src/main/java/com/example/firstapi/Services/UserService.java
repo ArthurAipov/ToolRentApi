@@ -1,6 +1,6 @@
-package com.example.firstapi.Controllers.Services;
+package com.example.firstapi.Services;
 
-import com.example.firstapi.Controllers.dtos.UserDTO;
+import com.example.firstapi.dtos.UserDTO;
 import com.example.firstapi.Models.User;
 import com.example.firstapi.Repositories.RoleRepository;
 import com.example.firstapi.Repositories.UserRepository;

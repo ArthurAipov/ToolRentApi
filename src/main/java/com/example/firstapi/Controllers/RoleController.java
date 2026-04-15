@@ -1,12 +1,11 @@
 package com.example.firstapi.Controllers;
 
-import com.example.firstapi.Controllers.Services.RoleService;
-import com.example.firstapi.Controllers.dtos.RoleDTO;
+import com.example.firstapi.Services.RoleService;
+import com.example.firstapi.dtos.RoleDTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,11 +18,6 @@ import java.util.List;
 public class RoleController {
 
     private final RoleService roleService;
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-    }
 
     @GetMapping
     public List<RoleDTO.GetRoleDTO> getRoles(){

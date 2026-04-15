@@ -1,7 +1,7 @@
 package com.example.firstapi.Controllers;
 
-import com.example.firstapi.Controllers.Services.UserService;
-import com.example.firstapi.Controllers.dtos.UserDTO;
+import com.example.firstapi.Services.UserService;
+import com.example.firstapi.dtos.UserDTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
