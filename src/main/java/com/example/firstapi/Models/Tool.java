@@ -1,6 +1,5 @@
 package com.example.firstapi.Models;
 
-import com.example.firstapi.Controllers.dtos.ToolDTO;
 import com.example.firstapi.Utilities.ToolStatus;
 import com.example.firstapi.Utilities.ToolStatusConvertor;
 import jakarta.persistence.*;
@@ -50,11 +49,7 @@ public class Tool {
         this.status = status;
     }
 
-    public void setNewParams(ToolDTO.PostToolDTO newParams){
-        this.name = newParams.name();
-        this.price = newParams.price();
-        this.status = newParams.toolStatus();
-    }
+
 
     public String getName() {
         return this.name;
