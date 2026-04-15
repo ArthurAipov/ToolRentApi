@@ -4,6 +4,8 @@ import com.example.firstapi.Controllers.dtos.UserDTO;
 import com.example.firstapi.Models.User;
 import com.example.firstapi.Repositories.RoleRepository;
 import com.example.firstapi.Repositories.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +30,11 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public Page<UserDTO.GetUserDTO> getUsersPage(Pageable pageable) {
+        return userRepository.findAll(pageable).map(this::toDto);
+    }
+
+    @Transactional(readOnly = true)
     public List<UserDTO.GetUserDTO> getUsers() {
         return userRepository.findAll().stream().map(this::toDto).toList();
     }
@@ -35,7 +42,8 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserDTO.GetUserDTO getUserByChatId(String chatId) {
         var user = userRepository.findUserByChatId(chatId).
-                orElseThrow(() -> new IllegalArgumentException("User with " + chatId + " not found"));
+                orElseThrow(() -> new IllegalArgumentException("User with "
+                        + chatId + " not found"));
         return toDto(user);
     }
 
@@ -101,7 +109,7 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUserName(Long id, String name){
+    public void updateUserName(Long id, String name) {
         var user = userRepository.findById(id).
                 orElseThrow(() -> new IllegalArgumentException("User with " + id + " not found"));
         user.setName(name);
@@ -109,7 +117,7 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUserSurname(Long id, String surname){
+    public void updateUserSurname(Long id, String surname) {
         var user = userRepository.findById(id).
                 orElseThrow(() -> new IllegalArgumentException("User with " + id + " not found"));
         user.setSurname(surname);
@@ -119,20 +127,19 @@ public class UserService {
 
     // DELETE REQUESTS
     @Transactional
-    public void deleteUserById(Long id){
+    public void deleteUserById(Long id) {
         var user = userRepository.findById(id).
                 orElseThrow(() -> new IllegalArgumentException("User with " + id + " not found"));
         userRepository.delete(user);
     }
 
     @Transactional
-    public void deleteByChatId(String chatId){
+    public void deleteByChatId(String chatId) {
         var delete = userRepository.deleteByChatId(chatId);
-        if (delete == 0){
+        if (delete == 0) {
             throw new IllegalArgumentException("User with " + chatId + " chatId not found");
-            }
+        }
     }
-
 
 
     // UTILITIES
