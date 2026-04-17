@@ -1,5 +1,8 @@
 package com.example.firstapi.Services;
 
+import com.example.firstapi.Exceptions.RoleValidationException;
+import com.example.firstapi.Exceptions.UserNotFoundException;
+import com.example.firstapi.Exceptions.UserValidationException;
 import com.example.firstapi.dtos.UserDTO;
 import com.example.firstapi.Models.User;
 import com.example.firstapi.Repositories.RoleRepository;
@@ -25,7 +28,7 @@ public class UserService {
     // GET REQUESTS
     @Transactional(readOnly = true)
     public UserDTO.GetUserDTO getUserById(Long id) {
-        var user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("User not found " + id));
+        var user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         return toDto(user);
     }
 
@@ -42,8 +45,8 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserDTO.GetUserDTO getUserByChatId(String chatId) {
         var user = userRepository.findUserByChatId(chatId).
-                orElseThrow(() -> new IllegalArgumentException("User with "
-                        + chatId + " not found"));
+                orElseThrow(() -> new UserValidationException("User with chatId "
+                        + chatId + " was not found"));
         return toDto(user);
     }
 
@@ -53,9 +56,9 @@ public class UserService {
     public UserDTO.GetUserDTO createNewUser(UserDTO.PostUserDTO userRecord) {
 
         if (userRepository.existsUserByChatId(userRecord.chatId()))
-            throw new IllegalArgumentException("User with chatId " + userRecord.chatId() + " already exists");
+            throw new UserValidationException("User with chatId " + userRecord.chatId() + " already exists");
         var role = roleRepository.findById(userRecord.roleId()).
-                orElseThrow(() -> new IllegalArgumentException("Role not found: " + userRecord.roleId()));
+                orElseThrow(() -> new RoleValidationException("Role with id " + userRecord.roleId() + " was not found"));
 
         var newUser = new User();
         newUser.setAlias(userRecord.alias());
@@ -72,7 +75,7 @@ public class UserService {
     @Transactional
     public UserDTO.GetUserDTO updateUser(Long id, UserDTO.UpdateUserDTO updateUserDTO) {
         var user = userRepository.findById(id).
-                orElseThrow(() -> new IllegalArgumentException("User with " + id + " not found"));
+                orElseThrow(() -> new UserNotFoundException(id));
         user.setName(updateUserDTO.name());
         user.setAlias(updateUserDTO.alias());
         user.setSurname(updateUserDTO.surname());
@@ -86,7 +89,7 @@ public class UserService {
     public void updateUserApprove(Long id, boolean newStatus) {
         int updated = userRepository.updateApproveStatus(id, newStatus);
         if (updated == 0) {
-            throw new IllegalArgumentException("User with " + id + " not found");
+            throw new UserNotFoundException(id);
         }
     }
 
@@ -94,16 +97,16 @@ public class UserService {
     public void updateUserBlackList(Long id, boolean newBlackList) {
         int update = userRepository.updateBlackList(id, newBlackList);
         if (update == 0) {
-            throw new IllegalArgumentException("User with " + id + " not found");
+            throw new UserNotFoundException(id);
         }
     }
 
     @Transactional
     public void updateUserRole(Long userId, Long roleId) {
         var user = userRepository.findById(userId).
-                orElseThrow(() -> new IllegalArgumentException("User with " + userId + " not found"));
+                orElseThrow(() -> new UserNotFoundException(userId));
         var role = roleRepository.findById(roleId).
-                orElseThrow(() -> new IllegalArgumentException("Role not found: " + roleId));
+                orElseThrow(() -> new RoleValidationException("Role with id " + roleId + " was not found"));
         user.setRole(role);
         userRepository.save(user);
     }
@@ -111,7 +114,7 @@ public class UserService {
     @Transactional
     public void updateUserName(Long id, String name) {
         var user = userRepository.findById(id).
-                orElseThrow(() -> new IllegalArgumentException("User with " + id + " not found"));
+                orElseThrow(() -> new UserNotFoundException(id));
         user.setName(name);
         userRepository.save(user);
     }
@@ -119,7 +122,7 @@ public class UserService {
     @Transactional
     public void updateUserSurname(Long id, String surname) {
         var user = userRepository.findById(id).
-                orElseThrow(() -> new IllegalArgumentException("User with " + id + " not found"));
+                orElseThrow(() -> new UserNotFoundException(id));
         user.setSurname(surname);
         userRepository.save(user);
     }
@@ -129,7 +132,7 @@ public class UserService {
     @Transactional
     public void deleteUserById(Long id) {
         var user = userRepository.findById(id).
-                orElseThrow(() -> new IllegalArgumentException("User with " + id + " not found"));
+                orElseThrow(() -> new UserNotFoundException(id));
         userRepository.delete(user);
     }
 
@@ -137,7 +140,7 @@ public class UserService {
     public void deleteByChatId(String chatId) {
         var delete = userRepository.deleteByChatId(chatId);
         if (delete == 0) {
-            throw new IllegalArgumentException("User with " + chatId + " chatId not found");
+            throw new UserValidationException("User with chatId " + chatId + " was not found");
         }
     }
 

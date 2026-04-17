@@ -28,6 +28,7 @@ public class OrderItemDTO {
 
     public record UpdateOrderItemDTO(
             @NotNull @Positive Long id,
+            @NotNull @Positive Long orderId,
             @NotNull @Positive Long toolId,
             @NotNull LocalDate startDate,
             @NotNull LocalDate endDate,

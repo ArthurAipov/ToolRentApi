@@ -1,5 +1,7 @@
 package com.example.firstapi.Services;
 
+import com.example.firstapi.Exceptions.ToolNotFoundException;
+import com.example.firstapi.Exceptions.ToolValidationException;
 import com.example.firstapi.dtos.ToolDTO;
 import com.example.firstapi.Models.Tool;
 import com.example.firstapi.Repositories.ToolRepository;
@@ -34,7 +36,7 @@ public class ToolService {
     public List<ToolDTO.GetToolDTO> getToolsByStatus(String status) {
         var toolStatus = ToolStatus.fromDb(status);
         if (toolStatus == null) {
-            throw new IllegalArgumentException("Unsupported tool status: " + status);
+            throw new ToolValidationException("Unsupported tool status: " + status);
         }
         return toolRepository.findAllByStatus(toolStatus).stream().map(this::toDto).toList();
     }
@@ -54,7 +56,7 @@ public class ToolService {
     public Page<ToolDTO.GetToolDTO> getToolsByStatus(String status, Pageable pageable) {
         var toolStatus = ToolStatus.fromDb(status);
         if (toolStatus == null) {
-            throw new IllegalArgumentException("Unsupported tool status: " + status);
+            throw new ToolValidationException("Unsupported tool status: " + status);
         }
         return toolRepository.findAllByStatus(toolStatus, pageable).map(this::toDto);
     }
@@ -62,7 +64,7 @@ public class ToolService {
     @Transactional
     public ToolDTO.GetToolDTO createTool(ToolDTO.PostToolDTO postToolDTO) {
         if (toolRepository.existsByCallBackData(postToolDTO.callbackData()))
-            throw new IllegalArgumentException("Tool with callback data '"
+            throw new ToolValidationException("Tool with callback data '"
                     + postToolDTO.callbackData() + "' already exists");
         var tool = new Tool();
         tool.setName(postToolDTO.name());
@@ -85,7 +87,7 @@ public class ToolService {
         var tool = getToolOrThrow(id);
 
         if (toolRepository.existsByCallBackDataAndIdNot(newCallBackData, id)) {
-            throw new IllegalArgumentException("Tool with callback data '"
+            throw new ToolValidationException("Tool with callback data '"
                     + newCallBackData + "' already exists");
         }
 
@@ -104,7 +106,7 @@ public class ToolService {
     public ToolDTO.GetToolDTO updateToolStatus(Long id, String newToolStatus) {
         var toolStatus = ToolStatus.fromDb(newToolStatus);
         if (toolStatus == null) {
-            throw new IllegalArgumentException("Unsupported tool status: "
+            throw new ToolValidationException("Unsupported tool status: "
                     + newToolStatus);
         }
         var tool = getToolOrThrow(id);
@@ -115,7 +117,7 @@ public class ToolService {
     @Transactional
     public ToolDTO.GetToolDTO updateTool(Long id, ToolDTO.PostToolDTO newToolParams) {
         if (toolRepository.existsByCallBackDataAndIdNot(newToolParams.callbackData(), id))
-            throw new IllegalArgumentException("Tool with callback data '"
+            throw new ToolValidationException("Tool with callback data '"
                     + newToolParams.callbackData() + "' already exists");
         var tool = getToolOrThrow(id);
         tool.setName(newToolParams.name());
@@ -151,13 +153,12 @@ public class ToolService {
 
     private Tool getToolOrThrow(Long id) {
         return toolRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Tool with id '"
-                        + id + "' not found"));
+                .orElseThrow(() -> new ToolNotFoundException(id));
     }
 
     private Tool getToolByCallBackOrThrow(String callBackData) {
         return toolRepository.findToolByCallBackData(callBackData)
-                .orElseThrow(() -> new IllegalArgumentException("Tool with callback data '"
+                .orElseThrow(() -> new ToolValidationException("Tool with callback data '"
                         + callBackData + "' not found"));
     }
 

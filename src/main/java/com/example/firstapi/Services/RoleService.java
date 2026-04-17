@@ -1,5 +1,6 @@
 package com.example.firstapi.Services;
 
+import com.example.firstapi.Exceptions.RoleValidationException;
 import com.example.firstapi.dtos.RoleDTO;
 import com.example.firstapi.Models.Role;
 import com.example.firstapi.Repositories.RoleRepository;
@@ -25,7 +26,7 @@ public class RoleService {
     @Transactional(readOnly = true)
     public RoleDTO.GetRoleDTO getRoleById(Long id){
         var role = roleRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Role not found: " + id));
+                .orElseThrow(() -> new RoleValidationException("Role with id " + id + " was not found"));
         return toDto(role);
     }
 
@@ -39,7 +40,7 @@ public class RoleService {
     @Transactional
     public RoleDTO.GetRoleDTO updateRole(Long id,RoleDTO.PostRoleDTO updateRoleDTO){
         var role = roleRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Role not found: " + id));
+                .orElseThrow(() -> new RoleValidationException("Role with id " + id + " was not found"));
         role.setName(updateRoleDTO.name());
         role = roleRepository.save(role);
         return toDto(role);
@@ -48,7 +49,7 @@ public class RoleService {
     @Transactional
     public void deleteRoleById(Long id){
         var role = roleRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Role not found: " + id));
+                .orElseThrow(() -> new RoleValidationException("Role with id " + id + " was not found"));
         roleRepository.delete(role);
 
     }

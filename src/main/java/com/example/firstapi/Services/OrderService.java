@@ -1,6 +1,7 @@
 package com.example.firstapi.Services;
 
 import com.example.firstapi.Exceptions.OrderNotFoundException;
+import com.example.firstapi.Exceptions.OrderValidationException;
 import com.example.firstapi.Exceptions.UserNotFoundException;
 import com.example.firstapi.Models.Order;
 import com.example.firstapi.Models.User;
@@ -90,7 +91,7 @@ public class OrderService {
 
     private void validateDates(LocalDate startDate, LocalDate endDate) {
         if (startDate.isAfter(endDate)) {
-            throw new IllegalArgumentException("Start date cannot be after end date");
+            throw OrderValidationException.invalidDates();
         }
     }
 
