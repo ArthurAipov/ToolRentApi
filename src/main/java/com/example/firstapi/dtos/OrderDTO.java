@@ -33,4 +33,9 @@ public class OrderDTO {
             @NotNull LocalDate endDate
     ) {
     }
+
+    public record UpdateOrderApproveDTO(
+            @NotNull Boolean approve
+    ) {
+    }
 }
